@@ -6,12 +6,21 @@ Hack RPI 2019
 """
 try:
     from the_high_ground import dependencies
+except ModuleNotFoundError:
+    pass
 try:
     from dependencies import lxml
+except ModuleNotFoundError:
+    pass
 try:
     from dependencies import firebase_admin
+except ModuleNotFoundError:
+    pass
 try:
     from dependencies import requests
+except ModuleNotFoundError:
+    pass
+
 from lxml import html
 import requests
 import firebase_admin
@@ -63,4 +72,3 @@ if __name__ == '__main__':
         for city_data in cities_data:
             new_city_data = get_weather(city_data)
         send_weather(new_cities_data)
-        time.sleep(5)
