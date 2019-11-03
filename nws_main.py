@@ -25,6 +25,9 @@ def get_cities(city_ref):
 # Scrapes national weather service for hazards containing the word flood
 # Search is done by coordinates
 def get_weather(city_data):
+    flood = ""
+    lat = ""
+    lon = ""
     for item in city_data[1]:
         if item == "Latitude":
             lat = city_data[1]["Latitude"]
@@ -79,7 +82,7 @@ def get_user_data(u_data, c_data):
         cities.append((city[0], city[1]["Latitude"], city[1]["Longitude"], city[1]["Flood"]))
 
     user = [u_data[0], u_data[1]["Latitude"], u_data[1]["Longitude"]]
-
+    # if user in city , do thing
     for city in cities:
         if float(city[1]) - .1 < float(user[1]) < float(city[1]) + .1:
             if float(city[2]) - .1 < float(user[2]) < float(city[2]) + .1:
@@ -92,11 +95,13 @@ def get_user_data(u_data, c_data):
     return u_data
 
 
+# Searches for nearest safe node in San Juan, then sets its coordinates as the persons safe node coordinates
 def node_search(lat, lon, u_data):
     distances = set()
     node_ref = db.collection(u'{}'.format("SJnodes"))
     nodes_data = get_cities(node_ref)
     for node in nodes_data:
+        # Nodes 14, 15, and 16 are elevated (safe)
         if int(node[1]["Number"]) >= 14:
             lat = float(lat)
             lon = float(lon)
@@ -105,10 +110,8 @@ def node_search(lat, lon, u_data):
             distance = math.sqrt((a ** 2) + (b ** 2))
             distances.add((distance, node[0], node[1]["Latitude"], node[1]["Longitude"]))
     distances = sorted(distances)
-    good_node = distances[0][1]
     u_data[1]["SNodeLat"] = distances[0][2]
     u_data[1]["SNodeLon"] = distances[0][3]
-
 
 
 cities_data = []
@@ -134,11 +137,11 @@ if __name__ == '__main__':
             new_city_data = get_weather(city_data)
             new_cities_data.append(new_city_data)
         send_data(new_cities_data, database)
-        # time.sleep(2.5)
+
         user_ref = db.collection(u'{}'.format(users))
         users_data = get_users(user_ref)
         for user_data in users_data:
             new_user_data = get_user_data(user_data, new_cities_data)
             new_users_data.append(new_user_data)
         send_data(new_users_data, users)
-        # time.sleep(2.5)
+        time.sleep(30)
