@@ -8,7 +8,6 @@ from dependencies import lxml
 from dependencies import firebase_admin
 from dependencies import requests
 from lxml import html
-from firebase_admin import firestore
 
 
 def get_cities(city_ref):
