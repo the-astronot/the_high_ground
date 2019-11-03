@@ -79,7 +79,7 @@ def get_users(u_data):
 def get_user_data(u_data, c_data):
     cities = []
     for city in c_data:
-        cities.append((city[0], city[1]["Latitude"], city[1]["Longitude"], city[1]["Flood"]))
+        cities.append((city[0], city[1]["Latitude"], city[1]["Longitude"], city[1]["Flood"], city[1]["nodes"]))
 
     user = [u_data[0], u_data[1]["Latitude"], u_data[1]["Longitude"]]
     # if user in city , do thing
@@ -88,7 +88,7 @@ def get_user_data(u_data, c_data):
             if float(city[2]) - .1 < float(user[2]) < float(city[2]) + .1:
                 if city[3] == "True":
                     u_data[1]["Warning"] = "True"
-                    node_search(user[1], user[2], u_data)
+                    node_search(user[1], user[2], u_data, city[4])
                 else:
                     u_data[1]["Warning"] = "False"
 
@@ -96,22 +96,23 @@ def get_user_data(u_data, c_data):
 
 
 # Searches for nearest safe node in San Juan, then sets its coordinates as the persons safe node coordinates
-def node_search(lat, lon, u_data):
-    distances = set()
-    node_ref = db.collection(u'{}'.format("SJnodes"))
+def node_search(lat, lon, u_data, dbn):
+    distances = []
+    node_ref = db.collection(u'{}'.format(dbn))
     nodes_data = get_cities(node_ref)
     for node in nodes_data:
         # Nodes 14, 15, and 16 are elevated (safe)
-        if int(node[1]["Number"]) >= 14:
+        if node[1]["Safety"] == "SAFE":
             lat = float(lat)
             lon = float(lon)
             a = abs(lat - float(node[1]["Latitude"]))
             b = abs(lon - float(node[1]["Longitude"]))
             distance = math.sqrt((a ** 2) + (b ** 2))
-            distances.add((distance, node[0], node[1]["Latitude"], node[1]["Longitude"]))
-    distances = sorted(distances)
-    u_data[1]["SNodeLat"] = distances[0][2]
-    u_data[1]["SNodeLon"] = distances[0][3]
+            distances.append((distance, node[0], node[1]["Latitude"], node[1]["Longitude"]))
+    sorted(distances)
+    final_dist = distances[0]
+    u_data[1]["SNodeLat"] = final_dist[2]
+    u_data[1]["SNodeLon"] = final_dist[3]
 
 
 cities_data = []
