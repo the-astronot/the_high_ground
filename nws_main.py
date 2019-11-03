@@ -95,7 +95,7 @@ def get_user_data(u_data, c_data):
     return u_data
 
 
-# Searches for nearest safe node in San Juan, then sets its coordinates as the persons safe node coordinates
+# Searches for nearest safe node in the area, then sets its coordinates as the persons safe node coordinates
 def node_search(lat, lon, u_data, dbn):
     distances = []
     node_ref = db.collection(u'{}'.format(dbn))
