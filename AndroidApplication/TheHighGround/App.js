@@ -16,6 +16,24 @@ const User = t.struct({
 });
 
 // //////// FIREBASE SETUP /////////////
+
+
+
+// <script src="https:\/\/www.gstatic.com/firebasejs/7.2.3/firebase-app.js">
+
+var firebaseConfig = {
+  apiKey: "AIzaSyCvEmaBPGgcIsDgA5QwNuhhm9Au5tAPsdI",
+  authDomain: "intricate-yew-257819.firebaseapp.com",
+  databaseURL: "https:\/\/intricate-yew-257819.firebaseio.com",
+  projectId: "intricate-yew-257819",
+  storageBucket: "intricate-yew-257819.appspot.com",
+  messagingSenderId: "473804431377",
+  appId: "1:473804431377:web:b3a591790492af1aed11b0",
+  measurementId: "G-157FMN6TMZ"
+};
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();
+
 // var firebaseConfig = {
 //   apiKey: "AIzaSyCvEmaBPGgcIsDgA5QwNuhhm9Au5tAPsdI",
 //   authDomain: "intricate-yew-257819.firebaseapp.com",
@@ -65,41 +83,43 @@ const formStyles = {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-export default class App extends Component {
+function sendPosistion(posistion){
+  console.log('posistion: ', posistion);
+  ToastAndroid.show(posistion.coords.latitude,5);
 
+  //@// TODO: get location to the db
+
+};
+
+
+export default class App extends Component {
   handleSubmit = () => {
     const value = this._form.getValue(); // use that ref to get the form value
     console.log('value: ', value);
+
     if (value !== null){
       ToastAndroid.show("You've been registered ".concat(value.FirstName,"!"), 15);
     };
-    navigator.geolocation.getCurrentPosition(
-      (success) => {
-        ToastAndroid.show(success,10);
-      }
-    );
+
+    navigator.geolocation.getCurrentPosition(sendPosistion);
 
 
-    // if (hasLocationPermission) {
-        // Geolocation.getCurrentPosition(
-        //     (position) => {
-        //         ToastAndroid.show(posistion,10);
-        //     },
-        //     (error) => {
-        //         // See error code charts below.
-        //         ToastAndroid.show("CRITICAL ERROR".concat(error.message),10);
-        //         console.log(error.code, error.message);
-        //     },
-        //     { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-        // );
-    // }
+    while (true){
+      setTimeout(function(){
 
-    // HERE IS WHERE THE DATABASE UPDATE HAPPENS
-    //IN A LOOP
-    //FOREVER!
+        ToastAndroid.show("success",1);
 
+        //@TODO update location on firedb
 
+        //@TODO check fire db for true or false flood // WARNING:
 
+        // @TODO if yes: do push notification with current path for the person.
+
+        //@TODO get start and end coords from databaseURL
+        //@TODO integrate google maps
+
+      }, 2000); // Delay in ms  - 900000 is 15 min interval
+    }
 
   }
 
@@ -107,11 +127,15 @@ export default class App extends Component {
   render() {
     return (
 
-
-
       <View style = {styles.container} >
 
+      <script src="https:\/\/www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
+      <script>
 
+       };
+
+
+      </script>
 
         <Form
           ref={c => this._form = c}
