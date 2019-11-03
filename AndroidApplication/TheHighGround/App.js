@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Button, ToastAndroid, AppRegistry} from 'react-native';
-// import firebase from 'react-native-firebase';
+import firebase from 'react-native-firebase';
 import t from 'tcomb-form-native'; // 0.6.9
 import icon from "./assets/icon.png";
-
+// import 'react-native-twilio';
 const twilio = require('react-native-twilio');
 
-var client = new twilio('ACc7b5996dfc1a9f5375576bd850e70805','6fb0a2cd25f1b9d16c26d178561c6660');
+// var client = new twilio('ACc7b5996dfc1a9f5375576bd850e70805','6fb0a2cd25f1b9d16c26d178561c6660');
+// twilio.initWithToken('6fb0a2cd25f1b9d16c26d178561c6660');
 
 const Form = t.form.Form;
 
@@ -101,22 +102,28 @@ export default class App extends Component {
   handleSubmit = () => {
     const value = this._form.getValue(); // use that ref to get the form value
     console.log('value: ', value);
+    console.log('Twilio Send Message ', 'test');
 
-    client.messages.create({
-    to: '+13154201533',
-    from: '+12564084538',
-    body: 'Hello from The Higher Ground! Please enjoy peace of mind'
-    });
-    client.sendMessage();
+    // client.messages.create({
+    // to: '+13154201533',
+    // from: '+12564084538',
+    // body: 'Hello from The Higher Ground! Please enjoy peace of mind'
+    // });
+    // client.sendMessage();
+    console.log('Twilio Send Message ', 'test');
+
 
     if (value !== null){
+      
       ToastAndroid.show("You've been registered ".concat(value.FirstName,"!"), 15);
     };
 
     navigator.geolocation.getCurrentPosition(sendPosistion);
 
 
-    while (true){
+    // BOOO poor form
+    //this needs to be replaced with a listener to the database
+    while (1===1){
       setTimeout(function(){
 
         ToastAndroid.show("success",1);
@@ -133,12 +140,12 @@ export default class App extends Component {
           //make that into a google maps thing.
           var g_maps = 'https://goo.gl/maps/HpghSqdzyCNGxxiR7';
           // Send the text message using twilio
-          client.messages.create({
-          to: value.PhoneNumber,
-          from: '+12564084538',
-          body: 'EMERGENCY FLOOD WARNING: SEEK SHELTER AT THE FOLLOWING LOCATION IMMEDIATLY '.concat(g_maps)
-          });
-          client.sendMessage();
+          // client.messages.create({
+          // to: value.PhoneNumber,
+          // from: '+12564084538',
+          // body: 'EMERGENCY FLOOD WARNING: SEEK SHELTER AT THE FOLLOWING LOCATION IMMEDIATLY '.concat(g_maps)
+          // });
+          // client.sendMessage();
         }
         //@TODO get start and end coords from databaseURL
         //@TODO integrate google maps
