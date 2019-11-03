@@ -38,7 +38,7 @@ def get_weather(city_data):
     url = "https://forecast.weather.gov/MapClick.php?lat={}&lon={}".format(lat, lon)
     page = requests.get(url)
     tree = html.fromstring(page.content)
-
+    time.sleep(.5)
     warnings = (tree.xpath('//div[@class="headline-title"]/text()'))
     for warning in warnings:
         print("{} : {}".format(city_data[0], warning))
@@ -109,7 +109,7 @@ def node_search(lat, lon, u_data, dbn):
             b = abs(lon - float(node[1]["Longitude"]))
             distance = math.sqrt((a ** 2) + (b ** 2))
             distances.append((distance, node[0], node[1]["Latitude"], node[1]["Longitude"]))
-    sorted(distances)
+    distances = sorted(distances)
     final_dist = distances[0]
     u_data[1]["SNodeLat"] = final_dist[2]
     u_data[1]["SNodeLon"] = final_dist[3]
