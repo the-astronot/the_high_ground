@@ -37,6 +37,7 @@ def get_weather(city_data):
 
     warnings = (tree.xpath('//div[@class="headline-title"]/text()'))
     for warning in warnings:
+        print("{} : {}".format(city_data[0], warning))
         if "Flood" in warning:
             flood = "True"
         else:
@@ -75,11 +76,11 @@ if __name__ == '__main__':
     db = firebase_admin.firestore.client()
 
     # Loop through getting city info, getting flood info for those cities, and updating the database
-    for x in range(10):
+    while True:
         city_ref = db.collection(u'{}'.format(database))
         cities_data = get_cities(city_ref)
         for city_data in cities_data:
             new_city_data = get_weather(city_data)
             new_cities_data.append(new_city_data)
         send_weather(new_cities_data)
-        time.sleep(5)
+        time.sleep(15)
