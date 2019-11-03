@@ -28,18 +28,22 @@ def get_weather(city_data):
             lon = city_data[1]["Longitude"]
         elif item == "Flood":
             flood = city_data[1]["Flood"]
-
-    url = "https://forecast.weather.gov/MapClick.php?lat={}&lon=-{}".format(lat, lon)
+    print(lat, lon)
+    url = "https://forecast.weather.gov/MapClick.php?lat={}&lon={}".format(lat, lon)
     page = requests.get(url)
     tree = html.fromstring(page.content)
 
     warnings = (tree.xpath('//div[@class="headline-title"]/text()'))
     for warning in warnings:
+        print(warning)
         if "Flood" in warning:
             print("True")
-            flood = True
+            flood = "True"
         else:
-            flood = False
+            flood = "False"
+            
+    if len(warnings) == 0:
+        flood = "False"
 
     city_data[1]["Flood"] = flood
     new_city_data = city_data
