@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Button, ToastAndroid} from 'react-native';
 // import firebase from 'react-native-firebase';
 import t from 'tcomb-form-native'; // 0.6.9
-import Geolocation from 'react-native-geolocation-service';
+// import Geolocation from 'react-native-geolocation-service';
 
-import icon from "./asssets/icon.png"
+import icon from "./assets/icon.png"
 
 const Form = t.form.Form;
 
@@ -60,7 +60,7 @@ const formStyles = {
       fontWeight: '600'
     }
   }
-}
+};
 
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -73,18 +73,25 @@ export default class App extends Component {
     if (value !== null){
       ToastAndroid.show("You've been registered ".concat(value.FirstName,"!"), 15);
     };
+    navigator.geolocation.getCurrentPosition(
+      (success) => {
+        ToastAndroid.show(success,10);
+      }
+    );
+
+
     // if (hasLocationPermission) {
-        Geolocation.getCurrentPosition(
-            (position) => {
-                ToastAndroid.show(posistion,10);
-            },
-            (error) => {
-                // See error code charts below.
-                ToastAndroid.show("CRITICAL ERROR".concat(error.message),10);
-                console.log(error.code, error.message);
-            },
-            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-        );
+        // Geolocation.getCurrentPosition(
+        //     (position) => {
+        //         ToastAndroid.show(posistion,10);
+        //     },
+        //     (error) => {
+        //         // See error code charts below.
+        //         ToastAndroid.show("CRITICAL ERROR".concat(error.message),10);
+        //         console.log(error.code, error.message);
+        //     },
+        //     { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        // );
     // }
 
     // HERE IS WHERE THE DATABASE UPDATE HAPPENS
@@ -95,12 +102,17 @@ export default class App extends Component {
 
 
   }
+
+
   render() {
     return (
-      
-      <img src={icon} alt="App logo" />
+
+
 
       <View style = {styles.container} >
+
+
+
         <Form
           ref={c => this._form = c}
           type={User}
