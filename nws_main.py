@@ -53,18 +53,49 @@ def get_weather(city_data):
 
 
 # Sends updated data back to firebase
-def send_weather(c_data):
+def send_data(c_data, database1):
     for item in c_data:
-        new_data_ref = db.collection(u'{}'.format(database)).document(u'{}'.format(item[0]))
+        new_data_ref = db.collection(u'{}'.format(database1)).document(u'{}'.format(item[0]))
         new_data = dict()
         for dict_item in item[1]:
             new_data[u'{}'.format(dict_item)] = u'{}'.format(item[1][dict_item])
         new_data_ref.set(new_data)
 
 
+# Gets user data
+def get_users(u_data):
+    users_data = []
+    docs = u_data.stream()
+
+    for doc in docs:
+        users_data.append((doc.id, doc.to_dict()))
+    return users_data
+
+
+# Determines whether or not a user should receive a warning
+def get_user_data(u_data, c_data):
+    cities = []
+    for city in c_data:
+        cities.append((city[0], city[1]["Latitude"], city[1]["Longitude"], city[1]["Flood"]))
+
+    user = [u_data[0], u_data[1]["Latitude"], u_data[1]["Longitude"]]
+
+    for city in cities:
+        if float(city[1]) - .1 < float(user[1]) < float(city[1]) + .1:
+            if float(city[2]) - .1 < float(user[2]) < float(city[2]) + .1:
+                if city[3] == "True":
+                    u_data[1]["Warning"] = "True"
+                else:
+                    u_data[1]["Warning"] = "False"
+
+    return u_data
+
+
 cities_data = []
 new_cities_data = []
+new_users_data = []
 database = "flood alerts"
+users = "users"
 
 
 # Guard
@@ -82,5 +113,12 @@ if __name__ == '__main__':
         for city_data in cities_data:
             new_city_data = get_weather(city_data)
             new_cities_data.append(new_city_data)
-        send_weather(new_cities_data)
-        time.sleep(15)
+        send_data(new_cities_data, database)
+        time.sleep(2.5)
+        user_ref = db.collection(u'{}'.format(users))
+        users_data = get_users(user_ref)
+        for user_data in users_data:
+            new_user_data = get_user_data(user_data, new_cities_data)
+            new_users_data.append(new_user_data)
+        send_data(new_users_data, users)
+        time.sleep(2.5)
