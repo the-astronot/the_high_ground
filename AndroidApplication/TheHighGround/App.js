@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Button, ToastAndroid} from 'react-native';
+import { View, StyleSheet, Button, ToastAndroid, AppRegistry} from 'react-native';
 // import firebase from 'react-native-firebase';
 import t from 'tcomb-form-native'; // 0.6.9
 // import Geolocation from 'react-native-geolocation-service';
@@ -86,6 +86,9 @@ const formStyles = {
 function sendPosistion(posistion){
   console.log('posistion: ', posistion);
   ToastAndroid.show(posistion.coords.latitude,5);
+  //sNodeLat - firebase attributes
+  ToastAndroid.show(posistion.coords.longitude,5);
+  //sNodeLon - firebase attributes
 
   //@// TODO: get location to the db
 
@@ -112,9 +115,11 @@ export default class App extends Component {
         //@TODO update location on firedb
 
         //@TODO check fire db for true or false flood // WARNING:
-
+        var Firebase_warning = true;
         // @TODO if yes: do push notification with current path for the person.
+        if (Firebase_warning){
 
+        }
         //@TODO get start and end coords from databaseURL
         //@TODO integrate google maps
 
