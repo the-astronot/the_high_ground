@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Button, ToastAndroid, AppRegistry} from 'react-native';
 // import firebase from 'react-native-firebase';
 import t from 'tcomb-form-native'; // 0.6.9
-// import Geolocation from 'react-native-geolocation-service';
+import icon from "./assets/icon.png";
 
-import icon from "./assets/icon.png"
+const twilio = require('react-native-twilio');
+
+var client = new twilio('ACc7b5996dfc1a9f5375576bd850e70805','6fb0a2cd25f1b9d16c26d178561c6660');
 
 const Form = t.form.Form;
 
@@ -100,6 +102,13 @@ export default class App extends Component {
     const value = this._form.getValue(); // use that ref to get the form value
     console.log('value: ', value);
 
+    client.messages.create({
+    to: '+13154201533',
+    from: '+12564084538',
+    body: 'Hello from Twilio!'
+    });
+    client.sendMessage();
+
     if (value !== null){
       ToastAndroid.show("You've been registered ".concat(value.FirstName,"!"), 15);
     };
@@ -118,7 +127,13 @@ export default class App extends Component {
         var Firebase_warning = true;
         // @TODO if yes: do push notification with current path for the person.
         if (Firebase_warning){
-
+          // Send the text message using twilio
+          client.messages.create({
+          to: '+13154201533',
+          from: '+12564084538',
+          body: 'Hello from Twilio!'
+          });
+          client.sendMessage();
         }
         //@TODO get start and end coords from databaseURL
         //@TODO integrate google maps
