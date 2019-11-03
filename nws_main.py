@@ -4,9 +4,11 @@ This script gets data from the National Weather Service and sends it to the data
 Author: Max Marshall
 Hack RPI 2019
 """
+from dependencies import lxml
+from dependencies import requests
+from dependencies import firebase_admin
 from lxml import html
 import requests
-import time
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
