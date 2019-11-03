@@ -5,6 +5,8 @@ Author: Max Marshall
 Hack RPI 2019
 """
 try:
+    from the_high_ground import dependencies
+try:
     from dependencies import lxml
 try:
     from dependencies import firebase_admin
