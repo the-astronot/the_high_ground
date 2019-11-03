@@ -4,27 +4,10 @@ This script gets data from the National Weather Service and sends it to the data
 Author: Max Marshall
 Hack RPI 2019
 """
-try:
-    from the_high_ground import dependencies
-except ModuleNotFoundError:
-    pass
-try:
-    from dependencies import lxml
-except ModuleNotFoundError:
-    pass
-try:
-    from dependencies import firebase_admin
-except ModuleNotFoundError:
-    pass
-try:
-    from dependencies import requests
-except ModuleNotFoundError:
-    pass
-
+from dependencies import lxml
+from dependencies import firebase_admin
+from dependencies import requests
 from lxml import html
-import requests
-import firebase_admin
-from firebase_admin import credentials
 from firebase_admin import firestore
 
 
@@ -64,7 +47,7 @@ if __name__ == '__main__':
     firebase_admin.initialize_app(cred, {
         'projectId': "intricate-yew-257819"
     })
-    db = firestore.client()
+    db = firebase_admin.firestore.client()
 
     for x in range(5):
         city_ref = db.collection(u'flood alerts')
