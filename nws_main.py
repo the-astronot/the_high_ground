@@ -7,6 +7,7 @@ Hack RPI 2019
 import firebase_admin
 from firebase_admin import firestore
 import requests
+import math
 import time
 from lxml import html
 
@@ -66,7 +67,6 @@ def send_data(c_data, database1):
 def get_users(u_data):
     users_data = []
     docs = u_data.stream()
-
     for doc in docs:
         users_data.append((doc.id, doc.to_dict()))
     return users_data
@@ -85,10 +85,30 @@ def get_user_data(u_data, c_data):
             if float(city[2]) - .1 < float(user[2]) < float(city[2]) + .1:
                 if city[3] == "True":
                     u_data[1]["Warning"] = "True"
+                    node_search(user[1], user[2], u_data)
                 else:
                     u_data[1]["Warning"] = "False"
 
     return u_data
+
+
+def node_search(lat, lon, u_data):
+    distances = set()
+    node_ref = db.collection(u'{}'.format("SJnodes"))
+    nodes_data = get_cities(node_ref)
+    for node in nodes_data:
+        if int(node[1]["Number"]) >= 14:
+            lat = float(lat)
+            lon = float(lon)
+            a = abs(lat - float(node[1]["Latitude"]))
+            b = abs(lon - float(node[1]["Longitude"]))
+            distance = math.sqrt((a ** 2) + (b ** 2))
+            distances.add((distance, node[0], node[1]["Latitude"], node[1]["Longitude"]))
+    distances = sorted(distances)
+    good_node = distances[0][1]
+    u_data[1]["SNodeLat"] = distances[0][2]
+    u_data[1]["SNodeLon"] = distances[0][3]
+
 
 
 cities_data = []
@@ -114,11 +134,11 @@ if __name__ == '__main__':
             new_city_data = get_weather(city_data)
             new_cities_data.append(new_city_data)
         send_data(new_cities_data, database)
-        time.sleep(2.5)
+        # time.sleep(2.5)
         user_ref = db.collection(u'{}'.format(users))
         users_data = get_users(user_ref)
         for user_data in users_data:
             new_user_data = get_user_data(user_data, new_cities_data)
             new_users_data.append(new_user_data)
         send_data(new_users_data, users)
-        time.sleep(2.5)
+        # time.sleep(2.5)

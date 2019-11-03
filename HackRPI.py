@@ -1,4 +1,5 @@
 import math
+import HackRPI_data
 
 def BFSNodeNode(G, s):
     n = len(G)
@@ -24,7 +25,7 @@ def BFSNodeNode(G, s):
     
     return pred, order, Star
 
-(pred, order, Star) = BFSNodeNode(G, s)
+
 def PathCreator(pred, s, j):
     #Determines the path from source node s to node j using the predecessor array.
     Path = [j]
@@ -90,6 +91,14 @@ def MinTimeMaxFlow(G, U, S, s, t, P):
     return vstar
 
 
-pred, order = AugPath(GT, UT, 1, 19) 
-Path=PathCreator(pred, s, 18)
-MinTimeMaxFlow(G, U, S, s, t, 100)
+if __name__ == '__main__':
+    s = 0
+    G = HackRPI_data.G
+    S = HackRPI_data.S
+    U = HackRPI_data.U
+    (pred, order, Star) = BFSNodeNode(G, 0)
+    #MinTimeMaxFlow(G, U, S, s, t, 100)
+    #pred, order = AugPath(GT, UT, 1, 19)
+    Path=PathCreator(pred, s, 18)
+    print(Path)
+
