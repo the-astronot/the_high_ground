@@ -11,6 +11,7 @@ import time
 from lxml import html
 
 
+# Gets city data from firebase
 def get_cities(city_ref):
     cities_data = []
     docs = city_ref.stream()
@@ -20,6 +21,8 @@ def get_cities(city_ref):
     return cities_data
 
 
+# Scrapes national weather service for hazards containing the word flood
+# Search is done by coordinates
 def get_weather(city_data):
     for item in city_data[1]:
         if item == "Latitude":
@@ -28,20 +31,17 @@ def get_weather(city_data):
             lon = city_data[1]["Longitude"]
         elif item == "Flood":
             flood = city_data[1]["Flood"]
-    print(lat, lon)
     url = "https://forecast.weather.gov/MapClick.php?lat={}&lon={}".format(lat, lon)
     page = requests.get(url)
     tree = html.fromstring(page.content)
 
     warnings = (tree.xpath('//div[@class="headline-title"]/text()'))
     for warning in warnings:
-        print(warning)
         if "Flood" in warning:
-            print("True")
             flood = "True"
         else:
             flood = "False"
-            
+
     if len(warnings) == 0:
         flood = "False"
 
@@ -51,6 +51,7 @@ def get_weather(city_data):
     return new_city_data
 
 
+# Sends updated data back to firebase
 def send_weather(c_data):
     for item in c_data:
         new_data_ref = db.collection(u'{}'.format(database)).document(u'{}'.format(item[0]))
@@ -65,13 +66,16 @@ new_cities_data = []
 database = "flood alerts"
 
 
+# Guard
 if __name__ == '__main__':
+    # Connecting to the Database
     cred = firebase_admin.credentials.Certificate("..\\the_high_ground\\keys\\"
                                                   "intricate-yew-257819-firebase-adminsdk-20d4l-42b875fcc5.json")
     firebase_admin.initialize_app(cred)
     db = firebase_admin.firestore.client()
 
-    for x in range(5):
+    # Loop through getting city info, getting flood info for those cities, and updating the database
+    for x in range(10):
         city_ref = db.collection(u'{}'.format(database))
         cities_data = get_cities(city_ref)
         for city_data in cities_data:
