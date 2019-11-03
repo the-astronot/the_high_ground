@@ -105,7 +105,7 @@ export default class App extends Component {
     client.messages.create({
     to: '+13154201533',
     from: '+12564084538',
-    body: 'Hello from Twilio!'
+    body: 'Hello from The Higher Ground! Please enjoy peace of mind'
     });
     client.sendMessage();
 
@@ -124,14 +124,19 @@ export default class App extends Component {
         //@TODO update location on firedb
 
         //@TODO check fire db for true or false flood // WARNING:
-        var Firebase_warning = true;
-        // @TODO if yes: do push notification with current path for the person.
+        var Firebase_warning = true; //@DEBUG
+
         if (Firebase_warning){
+          //@// DEBUG:
+          //get lat long best path from db
+
+          //make that into a google maps thing.
+          var g_maps = 'https://goo.gl/maps/HpghSqdzyCNGxxiR7';
           // Send the text message using twilio
           client.messages.create({
-          to: '+13154201533',
+          to: value.PhoneNumber,
           from: '+12564084538',
-          body: 'Hello from Twilio!'
+          body: 'EMERGENCY FLOOD WARNING: SEEK SHELTER AT THE FOLLOWING LOCATION IMMEDIATLY '.concat(g_maps)
           });
           client.sendMessage();
         }
