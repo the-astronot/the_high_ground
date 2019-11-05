@@ -6,8 +6,8 @@ import icon from "./assets/icon.png";
 // import 'react-native-twilio';
 const twilio = require('react-native-twilio');
 
-// var client = new twilio('ACc7b5996dfc1a9f5375576bd850e70805','6fb0a2cd25f1b9d16c26d178561c6660');
-// twilio.initWithToken('6fb0a2cd25f1b9d16c26d178561c6660');
+// var client = new twilio();
+// twilio.initWithToken();
 
 const Form = t.form.Form;
 
@@ -25,7 +25,7 @@ const User = t.struct({
 // <script src="https:\/\/www.gstatic.com/firebasejs/7.2.3/firebase-app.js">
 
 var firebaseConfig = {
-  apiKey: "AIzaSyCvEmaBPGgcIsDgA5QwNuhhm9Au5tAPsdI",
+  apiKey: ""
   authDomain: "intricate-yew-257819.firebaseapp.com",
   databaseURL: "https:\/\/intricate-yew-257819.firebaseio.com",
   projectId: "intricate-yew-257819",
@@ -114,7 +114,7 @@ export default class App extends Component {
 
 
     if (value !== null){
-      
+
       ToastAndroid.show("You've been registered ".concat(value.FirstName,"!"), 15);
     };
 
